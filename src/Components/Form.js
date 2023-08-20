@@ -14,6 +14,22 @@ function Form() {
     setUsers(response.data.data);
   };
 
+  /*
+  WIthout async and await
+  axios.post("http://locahost:8080/users",{
+    name:name,
+    student:student,
+  })
+  .then((response) =>{
+    console.log(response);
+    setUsers(response.data.data)
+  })
+  
+  
+  
+  
+  */
+
   return (
     <div>
       <div className="formInput">
