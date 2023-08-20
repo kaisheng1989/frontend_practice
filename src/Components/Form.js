@@ -3,6 +3,7 @@ import axios from "axios";
 function Form() {
   const [name, setName] = useState("");
   const [student, setStudent] = useState("");
+  const [users, setUsers] = useState([]);
 
   const addUser = async () => {
     const response = await axios.post("http://localhost:8080/users", {
@@ -10,6 +11,7 @@ function Form() {
       student: student,
     });
     console.log(response);
+    setUsers(response.data.data);
   };
 
   return (
@@ -33,6 +35,18 @@ function Form() {
         />
       </div>
       <button onClick={addUser}>Send</button>
+
+      {users && users.length > 0 ? (
+        users.map((user) => {
+          return (
+            <div>
+              {user.name} - {user.student}
+            </div>
+          );
+        })
+      ) : (
+        <p>No users</p>
+      )}
     </div>
   );
 }
