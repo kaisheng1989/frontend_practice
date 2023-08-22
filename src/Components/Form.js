@@ -1,18 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 function Form() {
-  const [name, setName] = useState("");
-  const [student, setStudent] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [age, setAge]= useState("");
+  const [currentCourse, setCurrentCourse]=useState("")
   const [users, setUsers] = useState([]);
+
+
+useEffect(()=>{
+  getUsers();
+},[])
+
+const getUsers =async () => {
+  let data = await axios.get("http://localhost:8080/users")
+  setUsers(data.data.users)
+}
+
+
 
   const addUser = async () => {
     const response = await axios.post("http://localhost:8080/users", {
-      name: name,
-      student: student,
+     first_name:firstName,
+     last_name: lastName,
+     age: age,
+     current_course: currentCourse,
     });
     console.log(response);
-    setUsers(response.data.data);
+    //setUsers(response.data.data);
+    const newUser = [...users, response.data.users];
+    setUsers(newUser)
   };
+  
 
   /*
   WIthout async and await
@@ -33,21 +52,39 @@ function Form() {
   return (
     <div>
       <div className="formInput">
-        <label>Name:</label>
+        <label> First Name:</label>
         <input
           type="text"
-          value={name}
-          placeholder="Please key in name"
-          onChange={(e) => setName(e.target.value)}
+          value={firstName}
+          placeholder="Please key in First Name"
+          onChange={(e) => setFirstName(e.target.value)}
         />
       </div>
       <div className="formInput">
-        <label>Student:</label>
+        <label>Last Name:</label>
         <input
           type="text"
-          value={student}
-          placeholder="Please key in student"
-          onChange={(e) => setStudent(e.target.value)}
+          value={lastName}
+          placeholder="Please key in Last Name"
+          onChange={(e) => setLastName(e.target.value)}
+        />
+      </div>
+      <div className="formInput">
+        <label>Age:</label>
+        <input
+          type="integer"
+          value={age}
+          placeholder="Please key in age"
+          onChange={(e) => setAge(e.target.value)}
+        />
+      </div>
+      <div className="formInput">
+        <label>Current Course:</label>
+        <input
+          type="text"
+          value={currentCourse}
+          placeholder="Please key in Last Name"
+          onChange={(e) => setCurrentCourse(e.target.value)}
         />
       </div>
       <button onClick={addUser}>Send</button>
@@ -55,8 +92,13 @@ function Form() {
       {users && users.length > 0 ? (
         users.map((user) => {
           return (
-            <div>
-              {user.name} - {user.student}
+            <div key={user.id}>
+            <p>
+              {user.first_name} - {user.last_name}
+            </p>
+             <p>
+              {user.age} - {user.current_course}
+            </p>
             </div>
           );
         })
